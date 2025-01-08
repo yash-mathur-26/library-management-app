@@ -1,5 +1,9 @@
 import React, {useState} from 'react';
 import { TextField,Button,Box,Typography } from '@mui/material';
+import { useLoginMutation } from '../services/authApi';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../features/auth/authSlice';
+import { useNavigate } from 'react-router-dom';
 const Login=()=>{
     const [email,setEmail] = useState<string>('');
     const [password,setPassword] = useState<string>('');
@@ -7,7 +11,9 @@ const Login=()=>{
         email:'',
         password:'',
     });
-
+    const [login] = useLoginMutation();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const validate=():boolean=>{
         let isValid = true;
         const newError = {email:'',password:''};
@@ -28,10 +34,20 @@ const Login=()=>{
         return isValid;
     }
 
-    const handleLogin = (e:React.FormEvent)=>{
+    const handleLogin = async(e:React.FormEvent)=>{
         e.preventDefault();
         if(validate()){
-            console.log('Login Successful')
+            const data = await login({email:email,password:password}).unwrap();
+            if(data.token){
+                const user = {
+                    name:data.user.name,
+                    email:data.user.email,
+                    role:data.user.role,
+                    token:data.token
+                }  
+            dispatch(setUser(user));
+            navigate('/dashboard');
+            }
         }
     }
 

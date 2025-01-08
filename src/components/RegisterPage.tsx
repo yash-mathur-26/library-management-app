@@ -1,8 +1,10 @@
 import React, {useState} from 'react';
 import { TextField,Button,Box,Typography,MenuItem } from '@mui/material';
-
+import { useRegisterMutation } from '../services/authApi';
+import { useNavigate } from 'react-router-dom';
 const roles = ['admin', 'student'];
 const RegisterPage=()=>{
+    const [register] = useRegisterMutation();
     const [formData,setFormData] = useState<{
         fullName:string;
         email:string;
@@ -31,7 +33,7 @@ const RegisterPage=()=>{
         confirmPassword:'',
         dob:''
     })
-
+    const navigate = useNavigate();
     const validateForm = (): boolean => {
         let isValid = true;
         const newErrors = { fullName: '', email: '', password: '', confirmPassword: '', dob: '' };
@@ -69,10 +71,39 @@ const RegisterPage=()=>{
         return isValid;
     };
 
-    const handleRegister=(e:React.FormEvent)=>{
+    const handleRegister=async(e:React.FormEvent)=>{
         e.preventDefault();
         if(validateForm()){
-            console.log('Registered successfully');
+            try {
+                const userData = {
+                    fullName:formData.fullName,
+                    email:formData.email,
+                    password:formData.password,
+                    dob:formData.dob,
+                    role:formData.role
+                }
+                await register(userData).unwrap();
+                
+                setFormData({
+                    fullName: '',
+                    email: '',
+                    password: '',
+                    confirmPassword: '',
+                    dob: '',
+                    role: '',
+                });
+                setErrors({
+                    fullName:'',
+                    email:'',
+                    password:'',
+                    confirmPassword:'',
+                    dob:''
+                });
+                navigate('/login');
+            } catch (error) {
+                console.error('Registration failed', error);
+                alert('Registration failed. Please try again.');
+            }
         }
     }
 

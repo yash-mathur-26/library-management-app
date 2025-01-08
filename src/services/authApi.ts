@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const baseQuery = fetchBaseQuery({
-    baseUrl:'/api',
+    baseUrl:'http://localhost:8080/api/auth',
     credentials:'include',
     prepareHeaders:(headers)=>{
         const token = localStorage.getItem('authToken');
@@ -29,8 +29,15 @@ export const authApi = createApi({
                 url:'/logout',
                 method:'POST',
             })
-        })
+        }),
+        register: builder.mutation({
+            query: (userData) => ({
+            url: '/register',
+            method: 'POST',
+            body: userData,
+            }),
+        }),
     })
 })
 
-export const { useLoginMutation,useLogoutMutation } = authApi;
+export const { useLoginMutation,useLogoutMutation,useRegisterMutation } = authApi;
