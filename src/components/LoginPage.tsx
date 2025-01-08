@@ -1,44 +1,72 @@
 import React, {useState} from 'react';
-import { useDispatch } from 'react-redux';
-import { login } from '../feature/authSlice';
-import { useNavigate } from 'react-router-dom';
+import { TextField,Button,Box,Typography } from '@mui/material';
+const Login=()=>{
+    const [email,setEmail] = useState<string>('');
+    const [password,setPassword] = useState<string>('');
+    const [errors,setErrors] = useState<{email:string,password:string}>({
+        email:'',
+        password:'',
+    });
 
-const LoginPage=()=>{
-    const [password,setPassword] = useState('');
-    const [email, setEmail] = useState('');
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+    const validate=():boolean=>{
+        let isValid = true;
+        const newError = {email:'',password:''};
+        if(!email){
+            newError.email = 'Email is required';
+            isValid = false;
+        } else if(!/\S+@\S+\.\S+/.test(email)){
+            newError.email = 'Please Enter a valid email';
+            isValid = false;
+        }
 
-    const handleSubmit = (e:React.FormEvent)=>{
+        if(!password){
+            newError.password = 'Password is required';
+            isValid = false;
+        }
+
+        setErrors(newError);
+        return isValid;
+    }
+
+    const handleLogin = (e:React.FormEvent)=>{
         e.preventDefault();
-        dispatch(login({password,email}));
-        navigate('/');
-    };
+        if(validate()){
+            console.log('Login Successful')
+        }
+    }
 
     return (
-        <div className='flex justify-center items-center h-screen bg-gray-100'>
-            <div className='bg-white shadow-md rounded-lg p-6 w-full max-w-md'>
-                
-                <h2 className="text-2xl font-bold text-center text-blue-600 mb-4">Login</h2>
-                <form onSubmit={handleSubmit}>
-                    
-                    <div>
-                        <label className='block text-sm font-medium text-gray-700'>Email:</label>
-                        <input type="email" value={email} className="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"onChange={(e)=>setEmail(e.target.value)} required/>
-                    </div>
-                    <div className='mb-4'>
-                        <label className='block text-sm font-medium text-gray-700'>Password:</label>
-                        <input type="password" value={password}
-                        className="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        onChange={(e)=>setPassword(e.target.value)} required/>
-                    </div>
-                    <button type="submit"
-                    className="w-full bg-blue-600 text-white py-2 rounded-md shadow-sm hover:bg-blue-700"
-                    >Submit</button>
-                </form>
-            </div>
-        
-        </div>
+        <Box style={{backgroundColor:"whitesmoke",boxShadow:"2px 2px"}}maxWidth={400} mx="auto" mt={5}>
+        <Typography style={{color:"black"}}variant="h4" mb={3}>
+        Login
+        </Typography>
+        <form onSubmit={handleLogin}>
+        <TextField
+            label="Email"
+            fullWidth
+            margin="normal"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+        />
+        {errors.email && <p style={{color:"red"}}>{errors.email}</p>}
+        <TextField
+            label="Password"
+            fullWidth
+            margin="normal"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+        />
+                {errors.password && <p style={{color:"red"}}>{errors.password}</p>}
+        <Button type="submit" variant="contained" color="primary" fullWidth>
+            Login
+        </Button>
+        </form>
+    </Box>
     )
 }
-export default LoginPage;
+
+export default Login;
