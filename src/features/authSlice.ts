@@ -22,17 +22,22 @@ export interface User{
 interface AuthState {
     users: User[];
     currentUser: User | null;
+    error:string | null;
 }
 
 const initialState:AuthState = {
     users:[],
     currentUser:null,
+    error:null,
 };
 
 const authSlice = createSlice({
     name:'auth',
     initialState,
     reducers:{
+        showAuthError:(state,action:PayloadAction<string>)=>{
+            state.error = action.payload
+        },
         registerUser:(state,action:PayloadAction<{fullName:string,email:string,dob:string,password:string,role:string}>)=>{
             const existingUser = state.users.find((user)=> user.email==action.payload.email);
             if(!existingUser){
@@ -43,7 +48,8 @@ const authSlice = createSlice({
                 }
                 state.users.push(newUser);
             } else {
-                throw new Error('Email already Exists!');
+                state.error='Email already Exists!';
+                throw new Error(state.error);
             }
         },
         loginUser:(state,action:PayloadAction<{email:string,password:string}>)=>{
@@ -55,7 +61,8 @@ const authSlice = createSlice({
                 console.log("Current user",JSON.stringify(state.currentUser,null,2))
                 console.log("User",JSON.stringify(user,null,2))
             } else {
-                throw new Error('Invalid credentails!');
+                state.error='Invalid credentails!';
+                throw new Error(state.error)
             }
         },
         logoutUser:(state)=>{
@@ -81,7 +88,8 @@ const authSlice = createSlice({
                     user.assignedBooks.push(newAssigned);
                 } 
                 else {
-                    throw new Error('Book is already assigned to the user');
+                    state.error='Book is already assigned to the user';
+                    throw new Error(state.error)
                 }
             }
         },
@@ -91,10 +99,9 @@ const authSlice = createSlice({
             if(userBook){
                 userBook.status='Returned';
             }
-            console.log("returned or not",user);
         }
     },
 })
 
-export const { registerUser,loginUser,logoutUser,bookAssigned,bookReturned } = authSlice.actions;
+export const { showAuthError,registerUser,loginUser,logoutUser,bookAssigned,bookReturned } = authSlice.actions;
 export default authSlice.reducer;

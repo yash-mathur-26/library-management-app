@@ -23,17 +23,22 @@ export interface AssignedBooks {
 interface BookState{
     books:Book[],
     assignedBookList:AssignedBooks[],
+    error:string|null
 }
 
 const initialState: BookState={
     books:[],
-    assignedBookList:[]
+    assignedBookList:[],
+    error:null
 }
 
 const bookSlice = createSlice({
     name:'book',
     initialState,
     reducers:{
+        showError:(state,action:PayloadAction<string>)=>{
+            state.error = action.payload
+        },
         addBook:(state,action:PayloadAction<{title:string,description:string,quantity:number,author:string}>)=>{
             const existingBook = state.books.find((book)=>book.title==action.payload.title);
             if(!existingBook){
@@ -43,7 +48,8 @@ const bookSlice = createSlice({
                 }
                 state.books.push(newBook);
             } else {
-                throw new Error('Book Already Exists');
+                state.error='Book Already Exists';
+                throw new Error(state.error);
             }
         },
         assignBook:(state,action:PayloadAction<{title:string,bookId:string,userId:string,assignDate:string,returnDate:string,status:string,userName:string}>)=>{
@@ -53,7 +59,8 @@ const bookSlice = createSlice({
                 const isReturned = state.assignedBookList.find((assigned)=>assigned.bookId===action.payload.bookId && assigned.userId===action.payload.userId && assigned.status!=="Returned");
                 
                 if(alreadyAssigned && isReturned){
-                    throw new Error("Book already assigned!")
+                    state.error="Book already assigned!"
+                    throw new Error(state.error);
                 }
                 if(book.quantity>0){
                     book.quantity -=1;
@@ -64,7 +71,8 @@ const bookSlice = createSlice({
                     state.assignedBookList.push(newAssign);    
                 }
             } else {
-                throw new Error('Sorry, no more books available to be assigned');
+                state.error='Sorry, no more books available to be assigned';
+                throw new Error(state.error);
             }
         },
         returnBook:(state,action:PayloadAction<{id:string,bookId:string,userId:string}>)=>{
@@ -85,22 +93,25 @@ const bookSlice = createSlice({
                     ...action.payload,
                 };
             } else {
-                throw new Error('Book not found');
+                state.error= 'Book not found';
+                throw new Error(state.error);
             }
         },
         deleteBook:(state,action:PayloadAction<string>)=>{
             const bookAssigned = state.assignedBookList.some((book)=>book.bookId===action.payload && book.status==="Pending")
             if(bookAssigned){
-                throw new Error("Book cannot be deleted, it's assigned to user");
+                state.error="Book cannot be deleted, it's assigned to user";
+                throw new Error(state.error);
             }
             const bookIndex = state.books.findIndex((book)=>book.id===action.payload);
             if(bookIndex !== -1){
                 state.books.splice(bookIndex,1);
             } else {
-                throw new Error('Book not found');
+                state.error='Book not found';
+                throw new Error(state.error);
             }
         }
     }
 })
-export const { addBook,assignBook,returnBook,editBook,deleteBook } = bookSlice.actions;
+export const { addBook,assignBook,returnBook,editBook,deleteBook,showError } = bookSlice.actions;
 export default bookSlice.reducer;

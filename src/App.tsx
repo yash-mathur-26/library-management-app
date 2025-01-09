@@ -4,6 +4,7 @@ import LoginUser from './components/LoginUser';
 import RegisterUser from './components/RegisterUser';
 import Dashboard from './components/Dashboard';
 import Navbar from './components/Navbar';
+import { Typography } from '@mui/material';
 function App() {
   
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path='/login' element={<LoginUser/>}/>
         <Route path='/register' element={<RegisterUser/>}/>
         <Route path='/dashboard' element={<Dashboard/>}/>
+        <Route path="/" element={<Typography>Welcome to Library Management System !!</Typography>}/>
       </Routes>
     </Router>
   )

@@ -1,11 +1,12 @@
 import { Box, Button, Container, MenuItem, Modal, Paper, Select, SelectChangeEvent, Table, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { addBook,assignBook, deleteBook, editBook } from '../features/bookSlice';
 import { bookAssigned } from '../features/authSlice';
 import { RootState } from '../app/store';
 import { Add, Delete, Edit } from '@mui/icons-material';
 import './booklist.css';
+import { toast, ToastContainer } from 'react-toastify';
 const BooksList:React.FC=()=>{
     const [editBookModal,setEditBookModal] = useState(false);
     const [editData,setEditData] = useState({id:'',title:'',description:'',author:'',quantity:''});
@@ -130,9 +131,21 @@ const BooksList:React.FC=()=>{
         setError(newError);
         return isValid;
     }
+    const isInitialRender = useRef(true);
+    const error = useSelector((state:RootState)=>state.book.error)
+    useEffect(() => {
+        if(isInitialRender.current){
+            isInitialRender.current=false;
+            return;
+        }
+        if (typeof error === 'string') {
+            toast.error(error);
+        }
+    }, [error]);
 
     return (
         <Container className='container'>
+            <ToastContainer/>
         <Modal
             open={addBookModal} onClose={closeAddBook} 
             aria-labelledby="modal-modal-title" 

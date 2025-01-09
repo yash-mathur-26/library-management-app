@@ -1,9 +1,11 @@
-import React, {useState} from 'react';
-import { useDispatch } from 'react-redux';
+import React, {useEffect, useRef, useState} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '../features/authSlice';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, MenuItem, TextField, Typography } from '@mui/material';
 import './register.css';
+import { toast, ToastContainer } from 'react-toastify';
+import { RootState } from '../app/store';
 const RegisterUser:React.FC=()=>{
     const [userData,setUserData] = useState({
         fullName:'',
@@ -79,9 +81,20 @@ const RegisterUser:React.FC=()=>{
             alert('Registration Failed, Please try again.')
         }
     }
-
+    const isInitialRender = useRef(true);
+    const error = useSelector((state:RootState)=>state.auth.error)
+    useEffect(() => {
+        if(isInitialRender.current){
+            isInitialRender.current=false;
+            return;
+        }
+        if (typeof error === 'string') {
+            toast.error(error);
+        }
+    }, [error]);
     return (
         <Box className="registration-box">
+            <ToastContainer/>
             <Typography className='registration-title'>Register User</Typography>
             <form onSubmit={sendUserRegistration} className='registration-form'>
                 <div>

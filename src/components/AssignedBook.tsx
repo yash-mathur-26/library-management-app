@@ -1,10 +1,11 @@
 import { Box, Button, Container, Modal, Paper, Table, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
-import React,{useState} from 'react';
+import React,{useEffect, useRef, useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../app/store';
 import { returnBook } from '../features/bookSlice';
 import { bookReturned } from '../features/authSlice';
 import "./assignedList.css";
+import { ToastContainer,toast } from 'react-toastify';
 const AssignedBooks:React.FC=()=>{
     const [assignBookModal,setAssignBookModal] = useState(false);
     const [bookData,setBookData] = useState({title:'',description:'',author:'',quantity:''});
@@ -20,8 +21,20 @@ const AssignedBooks:React.FC=()=>{
     const handleAssignBook=(e:React.FormEvent)=>{
         e.preventDefault();
     }
+    const isInitialRender = useRef(true);
+    const error = useSelector((state:RootState)=>state.book.error)
+    useEffect(() => {
+        if(isInitialRender.current){
+            isInitialRender.current=false;
+            return;
+        }
+        if (typeof error === 'string') {
+            toast.error(error);
+        }
+    }, [error]);
     return (
         <Container className='container'>
+        <ToastContainer/>
         <Modal 
             open={assignBookModal} onClose={closeAddBook} 
             aria-labelledby="modal-modal-title" 

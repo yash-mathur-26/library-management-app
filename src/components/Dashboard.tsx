@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useEffect, useRef, useState} from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../app/store';
 import { Box, Card, CardContent, Container, Drawer, List, ListItem, ListItemButton, ListItemIcon, Typography } from '@mui/material';
@@ -6,6 +6,7 @@ import { Assignment, Book, BookOnlineRounded, DashboardRounded } from '@mui/icon
 import StudentDashboard from './StudentDashboard';
 import AssignedBooks from './AssignedBook';
 import BooksList from './BookList';
+import { ToastContainer,toast } from 'react-toastify';
 const Dashboard:React.FC=()=>{
 
     const user = useSelector((state:RootState)=>state.auth.currentUser);
@@ -18,10 +19,22 @@ const Dashboard:React.FC=()=>{
     const totalBooks = books.length;
     const returnedBookLength = assignedBookList.filter((book)=>book.status==='Returned').length
     const assignedBookLength = assignedBookList.length;
+        const isInitialRender = useRef(true);
+        const error = useSelector((state:RootState)=>state.book.error)
+        useEffect(() => {
+            if(isInitialRender.current){
+                isInitialRender.current=false;
+                return;
+            }
+            if (typeof error === 'string') {
+                toast.error(error);
+            }
+        }, [error]);
     return (
         <>
         {user?.role==='admin' && 
         <Container>
+            <ToastContainer/>
             <Drawer anchor='left' variant='persistent' open={true}>
                 <List>
                     <ListItemButton onClick={()=>handlePage('dashboard')}>

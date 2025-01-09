@@ -1,9 +1,11 @@
-import React, {useState} from 'react';
-import { useDispatch } from 'react-redux';
+import React, {useEffect, useRef, useState} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../features/authSlice';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, TextField } from '@mui/material';
 import './loginUser.css';
+import { toast, ToastContainer } from 'react-toastify';
+import { RootState } from '../app/store';
 const LoginUser:React.FC=()=>{
     const [formData,setFormData] = useState({email:'',password:''});
     const [ errors,setErrors ] = useState({email:'',password:''});
@@ -38,8 +40,20 @@ const LoginUser:React.FC=()=>{
             }
         }
     }
+    const isInitialRender = useRef(true);
+    const error = useSelector((state:RootState)=>state.auth.error)
+    useEffect(() => {
+        if(isInitialRender.current){
+            isInitialRender.current=false;
+            return;
+        }
+        if (typeof error === 'string') {
+            toast.error(error);
+        }
+    }, [error]);
     return (
         <Box className="loginbox">
+            <ToastContainer/>
             <form onSubmit={loginPortal}>
             <div>
                 <TextField
