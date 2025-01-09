@@ -1,17 +1,31 @@
-import { configureStore } from '@reduxjs/toolkit';
-import authReducer from '../features/auth/authSlice';
-import { authApi } from '../services/authApi';
-import { booksApi } from '../services/booksApi';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { persistStore,persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+import authReducer from '../features/authSlice';
+import bookReducer from '../features/bookSlice';
+import { FLUSH,REHYDRATE,PAUSE,PERSIST,PURGE,REGISTER } from 'redux-persist/es/constants';
+const persistConfig = {
+    key:'root',
+    storage,
+}
 
-export const store = configureStore({
-  reducer: {
-    auth: authReducer,
-    [authApi.reducerPath]: authApi.reducer,
-    [booksApi.reducerPath]: booksApi.reducer,
-  },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(authApi.middleware,booksApi.middleware),
-});
+const rootReducer = combineReducers({
+    auth:authReducer,
+    book:bookReducer,
+})
+const persistedReducer = persistReducer(persistConfig,rootReducer) 
 
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+const store = configureStore({
+    reducer: persistedReducer,
+    middleware:(getDefaultMiddleware)=>
+        getDefaultMiddleware({
+            serializableCheck:{
+                ignoredActions:[FLUSH,REHYDRATE,PAUSE,PERSIST,PURGE,REGISTER],
+            }
+        })
+})
+
+export type RootState = ReturnType<typeof store.getState>
+export type AppDispatch = typeof store.dispatch
+export const persistor = persistStore(store);
+export default store;

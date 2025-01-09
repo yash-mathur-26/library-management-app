@@ -1,40 +1,60 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../app/hooks'; 
-import { logout } from '../features/auth/authSlice';
-import { AppBar,Toolbar,Typography,Button,Avatar } from '@mui/material';
+import { AppBar, Avatar, Box, Container, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
+import React, {useState} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../app/store';
+import { logoutUser } from '../features/authSlice';
+import { Link, useNavigate } from 'react-router-dom';
 
-const NavBar:React.FC=()=>{
-    const dispatch = useAppDispatch();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { user } = useAppSelector((state: { auth: any; }) => state.auth);
-    const handleLogout = () => {
-        dispatch(logout());
-    };
-    return(
-        <AppBar position="static">
-        <Toolbar>
-            <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Library Management
-            </Typography>
-            {!user ? (
-            <>
-                <Button color="inherit" component={Link} to="/login">
-                Login
-                </Button>
-                <Button color="inherit" component={Link} to="/register">
-                Register
-                </Button>
-            </>
-            ) : (
-            <>
-                <Avatar sx={{ marginRight: 2 }} />
-                <Typography>{user.userName}</Typography>
-                <Button onClick={handleLogout}>Logout</Button>
-            </>
-            )}
-        </Toolbar>
-    </AppBar>
+const Navbar=()=>{
+    const user = useSelector((state:RootState)=>state.auth.currentUser);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const [openLogoutMenu,setLogoutMenu] = useState(false);
+    const handleOpenLogoutMenu=()=>{
+        setLogoutMenu(true);
+    }
+    const handleCloseLogoutMenu=()=>{
+        setLogoutMenu(false);
+    }
+    const handleLogout=()=>{
+        dispatch(logoutUser());
+        navigate('/login');
+    }
+    return (
+        <AppBar>
+            <Container>
+                <Toolbar>
+                    <Typography>Library Management System</Typography> 
+                { !user?.id && 
+                        <>
+                        <MenuItem>
+                            <Typography>
+                                <Link to="/login">Login</Link></Typography>
+                                
+                        </MenuItem>
+                        <MenuItem>
+                        <Typography>
+                        <Link to="/register">Register
+                        </Link></Typography>
+                        </MenuItem>
+                        </>
+                }
+                </Toolbar>
+                { user?.id && 
+                <Box>
+                    <IconButton onClick={handleOpenLogoutMenu}>
+                        <Avatar/>
+                    </IconButton>
+                    <Menu onClose={handleCloseLogoutMenu} open={openLogoutMenu}>
+                        <MenuItem onClick={handleLogout}>
+                            Logout
+                        </MenuItem>
+                    </Menu>
+                    
+                </Box>
+                }
+            </Container>
+        </AppBar>
     )
 }
-export default NavBar;
+export default Navbar;
