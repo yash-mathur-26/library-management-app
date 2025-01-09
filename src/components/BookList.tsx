@@ -1,10 +1,10 @@
 import { Box, Button, Container, MenuItem, Modal, Paper, Select, SelectChangeEvent, Table, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
-import { addBook,assignBook, deleteBook, editBook } from '../features/bookSlice';
-import { bookAssigned } from '../features/authSlice';
+import { addBook,assignBook, deleteBook, editBook, showError } from '../features/bookSlice';
+import { bookAssigned, updateBookDetails } from '../features/authSlice';
 import { RootState } from '../app/store';
-import { Add, Delete, Edit } from '@mui/icons-material';
+import { Add, Cancel, Delete, Edit } from '@mui/icons-material';
 import './booklist.css';
 import { toast, ToastContainer } from 'react-toastify';
 const BooksList:React.FC=()=>{
@@ -14,6 +14,8 @@ const BooksList:React.FC=()=>{
     const [assignBookModal,setAssignBook] = useState(false);
     const [assignBookData,setAssignBookData] = useState({userId:'',bookId:'',title:'',assignDate:'',returnDate:'',userName:'',status:"Pending"});
     const [bookData,setBookData] = useState({title:'',description:'',author:'',quantity:''});
+    const [deleteBookData,setDeleteBookData] = useState({title:'',bookId:''});
+    const [deleteModal,setDeleteModal] = useState(false);
     const [errors,setError] = useState({title:'',description:'',author:'',quantity:''});
     const [selectedUserId,setUserId] = useState('');
     const books = useSelector((state:RootState)=>state.book.books);
@@ -32,18 +34,35 @@ const BooksList:React.FC=()=>{
     }
     const closeEditBookModal=()=>{
         setEditBookModal(false)
+        setEditData({
+            id:'',
+            title:'',
+            author:'',
+            description:'',
+            quantity:''
+            })
     }
     const handleEditDetails=(e:React.FormEvent)=>{
         e.preventDefault();
-        const editedData = {
-            id:editData.id,
-            title:editData.title,
-            author:editData.author,
-            description:editData.description,
-            quantity:parseInt(editData.quantity)
+        if(editFormValidate()){
+            const editedData = {
+                id:editData.id,
+                title:editData.title,
+                author:editData.author,
+                description:editData.description,
+                quantity:parseInt(editData.quantity)
+            }
+            try {
+                closeEditBookModal();
+                dispatch(editBook(editedData));
+                dispatch(updateBookDetails({bookId:editedData.id,title:editedData.title}));
+            } catch (error) {
+                console.log("Error",error);
+                if(error instanceof Error){
+                    toast.error(error.message);
+                }
+            }
         }
-        dispatch(editBook(editedData));
-        closeEditBookModal();
     }
     const openAddBookModal=()=>{
         setAddBook(true)
@@ -66,25 +85,49 @@ const BooksList:React.FC=()=>{
         try {
             dispatch(assignBook(assignBookData));
             dispatch(bookAssigned(assignBookData));
+            closeAssignBook();
         } catch (error) {
-            console.log("Error:",error);
-            alert("Cannot be assigned");
+            console.log("Error",error);
+            if(error instanceof Error){
+                toast.error(error.message);
+            }
         }
     }
     const closeAssignBook = ()=>{
         setAssignBook(false);
+        setAssignBookData({
+            userId:'',bookId:'',title:'',assignDate:'',returnDate:'',userName:'',status:"Pending"
+        })
     }
     const handleDeleteBook=(bookId:string)=>{
-        dispatch(deleteBook(bookId));
+        try {
+            dispatch(deleteBook(bookId));
+            closeDeleteModal();        
+        } catch (error) {
+            console.log("Error",error);
+            if(error instanceof Error){
+                toast.error(error.message);
+            }
+        }
     }
+
+    const handleDeleteBookModal=(bookId:string,bookTitle:string)=>{
+        setDeleteBookData({bookId:bookId,title:bookTitle});
+        setDeleteModal(true);
+    }
+    const closeDeleteModal=()=>{
+        setDeleteBookData({bookId:'',title:''});
+        setDeleteModal(false);
+    }
+
+    useEffect(()=>{
+        showError(null);
+    },[])
     const users = useSelector((state:RootState)=>state.auth.users);
     const handleUserChange=(e:SelectChangeEvent<string>)=>{
         const userId = e.target.value;
         setUserId(userId);
-        console.log("User Id",userId);
         const user = users.find((user)=>user.id===userId);
-        console.log("User Id",userId,user);
-        console.log("All users",users);
         if(user){
             setAssignBookData({
                 ...assignBookData,userId:userId,userName:user?.fullName
@@ -101,11 +144,19 @@ const BooksList:React.FC=()=>{
                     description:bookData.description,
                     quantity:parseInt(bookData.quantity)
                 }
+                setBookData({
+                    title:"",
+                    author:"",
+                    description:"",
+                    quantity:""
+                })
                 dispatch(addBook(newBookData));
                 closeAddBook();
             } catch (error) {
-                console.log("Error:",error);
-                alert("Error while adding book");
+                console.log("Error",error);
+                if(error instanceof Error){
+                    toast.error(error.message);
+                }
             }
         }
     }
@@ -131,20 +182,31 @@ const BooksList:React.FC=()=>{
         setError(newError);
         return isValid;
     }
-    const isInitialRender = useRef(true);
-    const error = useSelector((state:RootState)=>state.book.error)
-    useEffect(() => {
-        if(isInitialRender.current){
-            isInitialRender.current=false;
-            return;
+    const editFormValidate=()=>{
+        let isValid = true;
+        const newError = {title:'',description:'',author:'',quantity:''}
+        if(!editData.title.trim()){
+            newError.author = "Please add Book Title"
+            isValid = false;
         }
-        if (typeof error === 'string') {
-            toast.error(error);
+        if(!editData.author.trim()){
+            newError.author="Please add Author";
+            isValid = false;
         }
-    }, [error]);
-
+        if(!editData.description.trim()){
+            newError.description="Please add Description";
+            isValid = false;
+        }
+        if(!editData.quantity.trim()){
+            newError.title="Please add Quantity";
+            isValid = false;
+        }
+        setError(newError);
+        return isValid;
+    }
+    const today = new Date().toISOString().split('T')[0];
     return (
-        <Container className='container'>
+        <Container className='bookListContainer'>
             <ToastContainer/>
         <Modal
             open={addBookModal} onClose={closeAddBook} 
@@ -192,6 +254,7 @@ const BooksList:React.FC=()=>{
                             label="Quantity"
                             fullWidth
                             margin="normal"
+                            type="number"
                             value={bookData.quantity}
                             onChange={(e)=>setBookData({...bookData,quantity:e.target.value})}
                         />
@@ -217,7 +280,6 @@ const BooksList:React.FC=()=>{
                             fullWidth
                             margin="normal"
                             value={editData.title}
-                            disabled={true}
                             onChange={(e)=>setEditData({...editData,title:e.target.value})}
                         />
                     </div>
@@ -249,6 +311,7 @@ const BooksList:React.FC=()=>{
                             label="Quantity"
                             fullWidth
                             margin="normal"
+                            type="number"
                             value={editData.quantity}
                             onChange={(e)=>setEditData({...editData,quantity:e.target.value})}
                         />
@@ -287,6 +350,12 @@ const BooksList:React.FC=()=>{
                             margin="normal"
                             value={assignBookData.assignDate}
                             onChange={(e)=>setAssignBookData({...assignBookData,assignDate:e.target.value})}
+                            inputProps={{
+                                min:today
+                            }}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
                         />
                     </div>
                     <div>
@@ -298,6 +367,12 @@ const BooksList:React.FC=()=>{
                             type="date"
                             value={assignBookData.returnDate}
                             onChange={(e)=>setAssignBookData({...assignBookData,returnDate:e.target.value})}
+                            inputProps={{
+                                min: assignBookData.assignDate || today
+                            }}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}    
                         />
                     </div>
                     <Button className="primary-button" type="submit">Assign Book</Button>
@@ -306,12 +381,24 @@ const BooksList:React.FC=()=>{
         </Modal>
 
 
+        <Modal open={deleteModal} onClose={closeDeleteModal} 
+            aria-labelledby="modal-modal-title" 
+            aria-describedby='modal-modal-description'>
+            <Box className="modal-box" style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
+                <Typography className='modal-title'>Are you sure you want to delete <b>{deleteBookData.title}</b> ?</Typography>
+                <div>
+                    <Button onClick={closeDeleteModal}><Cancel/>Cancel</Button>
+                    <Button className="delete-button" onClick={()=>handleDeleteBook(deleteBookData.bookId)}><Delete/>Delete</Button>
+                </div>
+            </Box>
+        </Modal>
+
 
 
             <Typography className='modal-title'>Books List</Typography>
             <Button className="primary-button" onClick={openAddBookModal}>Add Book</Button>
             {books.length>0 ? (<TableContainer className='table-container' component={Paper}>
-                <Table className='table'>
+                <Table className='booklist-table'>
                     <TableHead>
                         <TableRow>
                             <TableCell>Title</TableCell>
@@ -327,9 +414,9 @@ const BooksList:React.FC=()=>{
                                 <TableCell>{book.description}</TableCell>
                                 <TableCell>{book.quantity}</TableCell>
                                 <TableCell>
-                                    <Button className='primary-button' onClick={()=>{openEditBookModal(book.id)}}><Edit/>Edit</Button>
-                                    <Button className='danger-button' onClick={()=>{handleDeleteBook(book.id)}}><Delete/>Delete</Button>
-                                    <Button className="secondary-button" onClick={()=>{handleAssignBook(book.title,book.id)}}><Add/>Assign Book</Button>
+                                    <Button className='edit-button' onClick={()=>{openEditBookModal(book.id)}}><Edit/>Edit</Button>
+                                    <Button className='delete-button' onClick={()=>{handleDeleteBookModal(book.id,book.title)}}><Delete/>Delete</Button>
+                                    <Button className="assign-button" onClick={()=>{handleAssignBook(book.title,book.id)}}><Add/>Assign Book</Button>
                                 </TableCell>
                             </TableRow>
                         ))}

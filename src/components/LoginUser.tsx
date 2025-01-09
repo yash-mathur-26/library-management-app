@@ -1,11 +1,11 @@
-import React, {useEffect, useRef, useState} from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, {useState} from 'react';
+import { useDispatch } from 'react-redux';
 import { loginUser } from '../features/authSlice';
 import { useNavigate } from 'react-router-dom';
-import { Box, Button, TextField } from '@mui/material';
+import { Box, Button, Container, TextField, Typography } from '@mui/material';
 import './loginUser.css';
+import loginLibrary from '../assets/libraryPhoto.webp';
 import { toast, ToastContainer } from 'react-toastify';
-import { RootState } from '../app/store';
 const LoginUser:React.FC=()=>{
     const [formData,setFormData] = useState({email:'',password:''});
     const [ errors,setErrors ] = useState({email:'',password:''});
@@ -35,26 +35,22 @@ const LoginUser:React.FC=()=>{
                 dispatch(loginUser({email:formData.email,password:formData.password}));
                 navigate('/dashboard');
             } catch (error) {
-                alert('Login Failed!!');
-                console.log("Error:",error);
+                if(error instanceof Error){
+                    toast.error(error.message);
+                }
             }
         }
     }
-    const isInitialRender = useRef(true);
-    const error = useSelector((state:RootState)=>state.auth.error)
-    useEffect(() => {
-        if(isInitialRender.current){
-            isInitialRender.current=false;
-            return;
-        }
-        if (typeof error === 'string') {
-            toast.error(error);
-        }
-    }, [error]);
     return (
+        <Container className="loginContainer">
         <Box className="loginbox">
             <ToastContainer/>
+            <div className="imageDivision">
+                <img src={loginLibrary}/>
+            </div>
+        
             <form onSubmit={loginPortal}>
+                <Typography>Login</Typography>
             <div>
                 <TextField
                     label="Email"
@@ -79,6 +75,7 @@ const LoginUser:React.FC=()=>{
             <Button type="submit">Login</Button>
         </form>    
         </Box>
+        </Container>
     )
 }
 export default LoginUser;

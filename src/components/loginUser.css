@@ -1,8 +1,75 @@
 .loginbox {
-    width: 400;
     margin: 50px auto;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     background-color: #f9f9f9;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    
+}
+.loginContainer{
+    margin-top: 150px;
+}
+
+form {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+}
+
+form > .MuiTypography-root {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+form .MuiTextField-root {
+    margin-bottom: 15px;
+}
+
+form p {
+    font-size: 14px;
+    margin: 5px 0;
+    color: #d32f2f; 
+}
+
+form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #1976d2; 
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: #145a86;
+}
+
+@media (max-width: 480px) {
+    form {
+        padding: 15px;
+    }
+
+    form > .MuiTypography-root {
+        font-size: 20px;
+    }
+
+    form button {
+        font-size: 14px;
+    }
 }

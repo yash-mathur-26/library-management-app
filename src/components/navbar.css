@@ -8,13 +8,16 @@ display: flex;
 justify-content: space-between;
 align-items: center;
 padding: 0 16px;
+width: 100% !important;
+max-width: 100% !important;
 }
 
 .app-bar-toolbar {
-display: flex;
-align-items: center;
-justify-content: space-between;
-width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100% !important;
+    max-width: 100% !important;
 }
 
 .app-bar-title {
@@ -35,7 +38,14 @@ font-weight: 500;
 }
 
 .menu-item a:hover {
-color: #ffcc00; /* Highlight color */
+color: #ffcc00;
+}
+
+.navbar-items{
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 
 .avatar-box {
@@ -49,7 +59,7 @@ color: #ffffff;
 }
 
 .menu {
-margin-top: 10px;
+    margin-top: 10px;
 }
 
 .logout-menu-item {

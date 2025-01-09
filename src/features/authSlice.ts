@@ -95,13 +95,28 @@ const authSlice = createSlice({
         },
         bookReturned:(state,action:PayloadAction<{bookId:string,userId:string,id:string}>)=>{
             const user = state.users.find((user)=>user.id===action.payload.userId);
-            const userBook=user?.assignedBooks.find((book)=>book.bookId===action.payload.bookId && book.userId===action.payload.userId);
-            if(userBook){
-                userBook.status='Returned';
+            if(user){
+                const userBook=user.assignedBooks.find((book)=>book.bookId===action.payload.bookId && book.userId===action.payload.userId);
+                if(userBook){
+                    userBook.status='Returned';
+                }
+            } else {
+                state.error = "User doesn't exist"
+                throw new Error(state.error)
             }
+            
+        },
+        updateBookDetails:(state,action:PayloadAction<{bookId:string,title:string}>)=>{
+            state.users.forEach((user)=>{
+                user.assignedBooks.forEach((book)=>{
+                    if(book.bookId===action.payload.bookId){
+                        book.title=action.payload.title
+                    }
+                })
+            })
         }
     },
 })
 
-export const { showAuthError,registerUser,loginUser,logoutUser,bookAssigned,bookReturned } = authSlice.actions;
+export const { showAuthError,registerUser,loginUser,logoutUser,bookAssigned,bookReturned,updateBookDetails } = authSlice.actions;
 export default authSlice.reducer;

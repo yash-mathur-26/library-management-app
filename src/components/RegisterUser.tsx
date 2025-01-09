@@ -1,11 +1,10 @@
-import React, {useEffect, useRef, useState} from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, {useState} from 'react';
+import { useDispatch } from 'react-redux';
 import { registerUser } from '../features/authSlice';
 import { useNavigate } from 'react-router-dom';
-import { Box, Button, MenuItem, TextField, Typography } from '@mui/material';
+import { Box, Button, Container, MenuItem, Select, TextField, Typography } from '@mui/material';
 import './register.css';
 import { toast, ToastContainer } from 'react-toastify';
-import { RootState } from '../app/store';
 const RegisterUser:React.FC=()=>{
     const [userData,setUserData] = useState({
         fullName:'',
@@ -32,6 +31,9 @@ const RegisterUser:React.FC=()=>{
             password:'',
             confirmPassword:'',
         }
+        const today = new Date();
+        const addedDate = new Date(userData.dob);
+        const age = today.getFullYear() - addedDate.getFullYear();
         if(!userData.fullName.trim()){
             newErrors.fullName = 'Full Name is required';
             isValid = false;
@@ -57,6 +59,9 @@ const RegisterUser:React.FC=()=>{
         if(!userData.dob.trim()){
             newErrors.dob = 'Please enter your Date of Birth';
             isValid = false;
+        } else if(age<18){
+            newErrors.dob = 'Age should be more than or equal to 18 years'
+            isValid = false;
         }
         setErrors(newErrors);
         return isValid;
@@ -78,25 +83,20 @@ const RegisterUser:React.FC=()=>{
             }
         } catch (errors){
             console.log("Error: ",errors);
-            alert('Registration Failed, Please try again.')
+            if(errors instanceof Error){
+                toast.error(errors.message);
+            }
         }
     }
-    const isInitialRender = useRef(true);
-    const error = useSelector((state:RootState)=>state.auth.error)
-    useEffect(() => {
-        if(isInitialRender.current){
-            isInitialRender.current=false;
-            return;
-        }
-        if (typeof error === 'string') {
-            toast.error(error);
-        }
-    }, [error]);
     return (
+        <Container>
         <Box className="registration-box">
             <ToastContainer/>
-            <Typography className='registration-title'>Register User</Typography>
+            <div className='registration-container'>
+            </div>
+        
             <form onSubmit={sendUserRegistration} className='registration-form'>
+            <Typography className='registration-title'>Register User</Typography>
                 <div>
                     <TextField
                         className='text-field'
@@ -105,6 +105,7 @@ const RegisterUser:React.FC=()=>{
                         margin="normal"
                         value={userData.fullName}
                         onChange={(e)=>setUserData({...userData,fullName:e.target.value})}
+                        error={!!errors.fullName}
                     />
                     { errors.fullName && <p className='error-message'>{errors.fullName}</p>}
                 </div>
@@ -116,6 +117,7 @@ const RegisterUser:React.FC=()=>{
                         margin="normal"
                         value={userData.email}
                         onChange={(e)=>setUserData({...userData,email:e.target.value})}
+                        error={!!errors.email}
                     />
                     { errors.email && <p className='error-message'>{errors.email}</p>}
                 </div>
@@ -128,6 +130,7 @@ const RegisterUser:React.FC=()=>{
                         margin="normal"
                         value={userData.password}
                         onChange={(e)=>setUserData({...userData,password:e.target.value})}
+                        error={!!errors.password}
                     />
                     { errors.password && <p className='error-message'>{errors.password}</p>}
                 </div>
@@ -140,6 +143,7 @@ const RegisterUser:React.FC=()=>{
                         margin="normal"
                         value={userData.confirmPassword}
                         onChange={(e)=>setUserData({...userData,confirmPassword:e.target.value})}
+                        error={!!errors.confirmPassword}
                     />
                     { errors.confirmPassword && <p className='error-message'>{errors.confirmPassword}</p>}
                 </div>
@@ -152,29 +156,36 @@ const RegisterUser:React.FC=()=>{
                         type="date"
                         value={userData.dob}
                         onChange={(e)=>setUserData({...userData,dob:e.target.value})}
+                        error={!!errors.dob}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
                     />
                     { errors.dob && <p className='error-message'>{errors.dob}</p>}
                 </div>
                 <div>
-                    <TextField
-                        className='text-field'
+                    <Select
+                        className="text-field"
                         label="Role"
                         fullWidth
-                        margin="normal"
                         value={userData.role}
                         onChange={(e)=>setUserData({...userData,role:e.target.value})}
                     >
-                        <MenuItem key="admin" value="admin">
+                        <MenuItem value="" disabled>
+                            Select role                        
+                        </MenuItem>
+                        <MenuItem value="admin" key="admin">
                             Admin
                         </MenuItem>
-                        <MenuItem key="student" value="student">
+                        <MenuItem value="student" key="student">
                             Student
                         </MenuItem>
-                    </TextField>
+                    </Select>
                 </div>
                 <Button type="submit" className='registeration-button'>Register</Button>
             </form>
         </Box>
+        </Container>
     )
 }
 export default RegisterUser;

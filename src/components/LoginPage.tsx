@@ -4,6 +4,7 @@ import { useLoginMutation } from '../services/authApi';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../features/auth/authSlice';
 import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
 const Login=()=>{
     const [email,setEmail] = useState<string>('');
     const [password,setPassword] = useState<string>('');
@@ -44,15 +45,23 @@ const Login=()=>{
                     email:data.user.email,
                     role:data.user.role,
                     token:data.token
-                }  
-            dispatch(setUser(user));
-            navigate('/dashboard');
-            }
+                }
+            try {
+                dispatch(setUser(user));
+                navigate('/dashboard');        
+            } catch (error) {
+                console.log(error);
+                if(error instanceof Error){
+                    toast.error(error.message);
+                }
+            }  
+        }
         }
     }
 
     return (
         <Box style={{backgroundColor:"whitesmoke",boxShadow:"2px 2px"}}maxWidth={400} mx="auto" mt={5}>
+        <ToastContainer/>
         <Typography style={{color:"black"}}variant="h4" mb={3}>
         Login
         </Typography>

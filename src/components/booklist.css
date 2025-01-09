@@ -1,124 +1,136 @@
-.container {
-    padding: 20px;
-    background-color: #f8f9fa;
-    color: #212529; 
-    font-family: Arial, sans-serif;
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f5f7;
+    margin: 0;
+    padding: 0;
+    color: #333;
 }
 
+.bookListContainer {
+    margin-top: 0px;
+    padding: 2em;
+}
+
+
 .modal-box {
-width: 500px;
-margin: auto;
-padding: 20px;
-border-radius: 8px;
-background-color: #ffffff;
-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-outline: none;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 2rem;
+    max-width: 500px;
+    margin: auto;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
 .modal-title {
-font-size: 1.5rem;
-font-weight: bold;
-color: #495057;
-margin-bottom: 20px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #444;
+    text-align: center;
+    margin-bottom: 1rem;
 }
 
 .modal-form {
-display: flex;
-flex-direction: column;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
-.modal-form div {
-margin-bottom: 16px;
+.text-field {
+    font-size: 1rem;
 }
 
-.text-field,
 .select-dropdown {
-width: 100%;
-}
-
-.select-dropdown .MuiSelect-select {
-background-color: #ffffff;
-color: #212529;
-}
-
-.select-dropdown .MuiSelect-icon {
-color: #495057;
-}
-
-.error-message {
-color: #dc3545;
-font-size: 0.9rem;
-margin-top: 4px;
+    width: 100%;
+    font-size: 1rem;
 }
 
 .primary-button {
-display: inline-block;
-padding: 10px 16px;
-background-color: #007bff;
-color: #ffffff;
-border: none;
-border-radius: 4px;
-font-size: 1rem;
-font-weight: bold;
-text-align: center;
-cursor: pointer;
+    background-color: #1976d2;
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease;
 }
 
 .primary-button:hover {
-background-color: #0056b3;
+    background-color: #155a9b;
 }
 
-.danger-button {
-    background-color: #dc3545;
-    color: #ffffff;
-}
-
-.danger-button:hover {
-    background-color: #b02a37; 
-    color: #f8f9fa;
-}
-
-.secondary-button {
-    background-color: #6c757d;
-    color: #ffffff;}
-
-.secondary-button:hover {
-    background-color: #495057;
-    color: #f8f9fa;
+.error-message {
+    color: #d32f2f;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
 }
 
 .table-container {
-margin-top: 20px;
-border: 1px solid #dee2e6; 
-border-radius: 8px;
-overflow: hidden;
+    margin-top: 2rem;
+    border-radius: 8px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
 }
 
-.table {
-width: 100%;
-border-collapse: collapse;
+.booklist-table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-.table th {
-background-color: #007bff;
-color: #ffffff;
-padding: 10px;
-text-align: left;
+.booklist-table th,
+.booklist-table td {
+    padding: 1rem;
+    text-align: left;
+    font-size: 1rem;
+    border-bottom: 1px solid #e0e0e0;
 }
 
-.table td {
-padding: 10px;
-color: #495057;
-border-bottom: 1px solid #dee2e6;
+.booklist-table th {
+    background-color: #f5f5f5;
+    font-weight: 600;
 }
 
-.table-row-actions button {
-margin-right: 8px;
+.edit-button {
+    background-color: #ffb74d;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    margin-right: 0.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.875rem;
+}
+
+.delete-button {
+    background-color: #e57373;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    margin-right: 0.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.875rem;
+}
+
+.assign-button {
+    background-color: #4caf50;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.875rem;
 }
 
 .no-books {
-font-size: 1.2rem;
-color: #495057;
-text-align: center;
-margin-top: 20px;
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #777;
 }

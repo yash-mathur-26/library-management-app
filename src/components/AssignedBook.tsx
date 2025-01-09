@@ -1,11 +1,11 @@
 import { Box, Button, Container, Modal, Paper, Table, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
-import React,{useEffect, useRef, useState} from 'react';
+import React,{useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../app/store';
 import { returnBook } from '../features/bookSlice';
 import { bookReturned } from '../features/authSlice';
 import "./assignedList.css";
-import { ToastContainer,toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 const AssignedBooks:React.FC=()=>{
     const [assignBookModal,setAssignBookModal] = useState(false);
     const [bookData,setBookData] = useState({title:'',description:'',author:'',quantity:''});
@@ -21,19 +21,8 @@ const AssignedBooks:React.FC=()=>{
     const handleAssignBook=(e:React.FormEvent)=>{
         e.preventDefault();
     }
-    const isInitialRender = useRef(true);
-    const error = useSelector((state:RootState)=>state.book.error)
-    useEffect(() => {
-        if(isInitialRender.current){
-            isInitialRender.current=false;
-            return;
-        }
-        if (typeof error === 'string') {
-            toast.error(error);
-        }
-    }, [error]);
     return (
-        <Container className='container'>
+        <Container className='assignedListContainer'>
         <ToastContainer/>
         <Modal 
             open={assignBookModal} onClose={closeAddBook} 
@@ -89,7 +78,7 @@ const AssignedBooks:React.FC=()=>{
 
             <Typography className='typography-title'>Assigned Books List</Typography>
             {assignedBooks.length>0 ? (<TableContainer className='table-container' component={Paper}>
-                <Table className='table'>
+                <Table className='assigntable'>
                     <TableHead>
                         <TableRow>
                             <TableCell>Title</TableCell>
@@ -105,8 +94,8 @@ const AssignedBooks:React.FC=()=>{
                                 <TableCell>{book.userName}</TableCell>
                                 <TableCell>{book.assignDate}</TableCell>
                                 <TableCell>{book.returnDate}</TableCell>
-                                <TableCell>{book.status}</TableCell>
-                                <TableCell className={(book.status==='Returned'?'table-cell-status-returned':'table-cell-status-pending')}><Button disabled={(book.status==='Returned'?true:false)} className={(book.status==="Returned"?"button-return":"button-disabled")}onClick={()=>{handleReturnBook(book.id,book.bookId,book.userId)}}>Return</Button></TableCell>
+                                <TableCell><Typography className={(book.status==='Returned'?'table-cell-status-returned':'table-cell-status-pending')}>{book.status}</Typography></TableCell>
+                                <TableCell><Button disabled={(book.status==='Returned'? true : false)} className={(book.status==="Returned" ? "button-return" : "button-disabled")}onClick={()=>{handleReturnBook(book.id,book.bookId,book.userId)}}>Return</Button></TableCell>
                             </TableRow>
                         ))}
                     </TableHead>

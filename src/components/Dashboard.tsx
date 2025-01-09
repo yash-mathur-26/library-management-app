@@ -1,14 +1,14 @@
-import React,{useEffect, useRef, useState} from 'react';
+import React,{useState} from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../app/store';
-import { Box, Card, CardContent, Container, Drawer, List, ListItem, ListItemButton, ListItemIcon, Typography } from '@mui/material';
+import { Box, Card, CardContent, Container, List, ListItem, ListItemButton, ListItemIcon, Typography } from '@mui/material';
 import { Assignment, Book, BookOnlineRounded, DashboardRounded } from '@mui/icons-material';
 import StudentDashboard from './StudentDashboard';
 import AssignedBooks from './AssignedBook';
 import BooksList from './BookList';
-import { ToastContainer,toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import './dashboard.css'
 const Dashboard:React.FC=()=>{
-
     const user = useSelector((state:RootState)=>state.auth.currentUser);
     const [page,setPage] = useState('dashboard');
     const handlePage =(value:string)=>{
@@ -19,23 +19,13 @@ const Dashboard:React.FC=()=>{
     const totalBooks = books.length;
     const returnedBookLength = assignedBookList.filter((book)=>book.status==='Returned').length
     const assignedBookLength = assignedBookList.length;
-        const isInitialRender = useRef(true);
-        const error = useSelector((state:RootState)=>state.book.error)
-        useEffect(() => {
-            if(isInitialRender.current){
-                isInitialRender.current=false;
-                return;
-            }
-            if (typeof error === 'string') {
-                toast.error(error);
-            }
-        }, [error]);
+    
     return (
         <>
         {user?.role==='admin' && 
-        <Container>
+        <Container className="dashboard-container" sx={{display:"flex",flexDirection:"row",gap:2,padding:1,marginTop:"6%",marginLeft:"-20px"}}>
             <ToastContainer/>
-            <Drawer anchor='left' variant='persistent' open={true}>
+                <Box className="sidebar-container">
                 <List>
                     <ListItemButton onClick={()=>handlePage('dashboard')}>
                         <ListItem key='dashboard'> 
@@ -56,8 +46,8 @@ const Dashboard:React.FC=()=>{
                         </ListItem>
                     </ListItemButton>
                 </List>
-            </Drawer>
-            <Box>
+                </Box>
+            <Box className="mainContainer">
                 { page==='dashboard' && 
                     <Container>
                     <Box className="dashboard-cards-container">

@@ -25,39 +25,52 @@ const Navbar=()=>{
             <Container className='app-bar-container'>
                 <Toolbar className='app-bar-toolbar'>
                     <Typography className='app-bar-title'>Library Management System</Typography> 
-                { !user?.id && 
-                        <>
+                    { !user?.id && 
+                        <Box className="navbar-items">
                         <MenuItem className='menu-item'>
                             <Typography>
-                                <Link to="/login">Login</Link></Typography>
-                                
+                                <Link to="/login">Login</Link>
+                            </Typography>    
                         </MenuItem>
                         <MenuItem className='menu-item'>
                         <Typography>
-                        <Link to="/register">Register</Link></Typography>
+                            <Link to="/register">Register</Link></Typography>
                         </MenuItem>
-                        </>
-                }
+                        </Box>
+                    }
                 </Toolbar>
                 { user?.id && 
                 <Box className="avatar-box">
                     <IconButton className="icon-button" onClick={handleOpenLogoutMenu}>
                         <Avatar/>
                     </IconButton>
-                    <Menu sx={{ mt: '45px' }}
+                    <Menu
+                        className='logoutMenu'
+                        sx={{
+                            "& .MuiPaper-root": {
+                                top: "43px !important",
+                            },
+                        }}
+                        style={{top:"23px"}}
                         id="menu-appbar"
                         anchorOrigin={{
                             vertical: 'top',
                             horizontal: 'right',
+                            
                         }}
                         keepMounted
                         transformOrigin={{
                             vertical: 'top',
                             horizontal: 'right',
-                        }}  className="menu" onClose={handleCloseLogoutMenu} open={openLogoutMenu}>
-                        <MenuItem className="logout-menu-item" onClick={handleLogout}>
-                            Logout
+                            
+                        }}
+                        open={openLogoutMenu}
+                        onClose={handleCloseLogoutMenu}
+                        >
+                        <MenuItem key='logout' onClick={handleLogout}>
+                            <Typography sx={{ textAlign: 'center' }}>Logout</Typography>
                         </MenuItem>
+                    
                     </Menu>
                 </Box>
                 }
