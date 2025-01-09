@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { registerUser } from '../features/authSlice';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, MenuItem, TextField, Typography } from '@mui/material';
-
+import './register.css';
 const RegisterUser:React.FC=()=>{
     const [userData,setUserData] = useState({
         fullName:'',
@@ -81,51 +81,58 @@ const RegisterUser:React.FC=()=>{
     }
 
     return (
-        <Box>
-            <Typography>Register User</Typography>
-            <form onSubmit={sendUserRegistration}>
+        <Box className="registration-box">
+            <Typography className='registration-title'>Register User</Typography>
+            <form onSubmit={sendUserRegistration} className='registration-form'>
                 <div>
                     <TextField
+                        className='text-field'
                         label="Full Name"
                         fullWidth
                         margin="normal"
                         value={userData.fullName}
                         onChange={(e)=>setUserData({...userData,fullName:e.target.value})}
                     />
-                    { errors.fullName && <p style={{color:"red"}}>{errors.fullName}</p>}
+                    { errors.fullName && <p className='error-message'>{errors.fullName}</p>}
                 </div>
                 <div>
                     <TextField
+                        className='text-field'
                         label="Email"
                         fullWidth
                         margin="normal"
                         value={userData.email}
                         onChange={(e)=>setUserData({...userData,email:e.target.value})}
                     />
-                    { errors.email && <p style={{color:"red"}}>{errors.email}</p>}
+                    { errors.email && <p className='error-message'>{errors.email}</p>}
                 </div>
                 <div>
                     <TextField
+                        className='text-field'
                         label="Password"
                         fullWidth
+                        type="password"
                         margin="normal"
                         value={userData.password}
                         onChange={(e)=>setUserData({...userData,password:e.target.value})}
                     />
-                    { errors.password && <p style={{color:"red"}}>{errors.password}</p>}
+                    { errors.password && <p className='error-message'>{errors.password}</p>}
                 </div>
                 <div>
                     <TextField
+                        className='text-field'
                         label="Confirm Password"
                         fullWidth
+                        type="password"
                         margin="normal"
                         value={userData.confirmPassword}
                         onChange={(e)=>setUserData({...userData,confirmPassword:e.target.value})}
                     />
-                    { errors.confirmPassword && <p style={{color:"red"}}>{errors.confirmPassword}</p>}
+                    { errors.confirmPassword && <p className='error-message'>{errors.confirmPassword}</p>}
                 </div>
                 <div>
                     <TextField
+                        className='text-field'
                         label="Date of Birth"
                         fullWidth
                         margin="normal"
@@ -133,10 +140,11 @@ const RegisterUser:React.FC=()=>{
                         value={userData.dob}
                         onChange={(e)=>setUserData({...userData,dob:e.target.value})}
                     />
-                    { errors.dob && <p style={{color:"red"}}>{errors.dob}</p>}
+                    { errors.dob && <p className='error-message'>{errors.dob}</p>}
                 </div>
                 <div>
                     <TextField
+                        className='text-field'
                         label="Role"
                         fullWidth
                         margin="normal"
@@ -151,7 +159,7 @@ const RegisterUser:React.FC=()=>{
                         </MenuItem>
                     </TextField>
                 </div>
-                <Button type="submit">Register</Button>
+                <Button type="submit" className='registeration-button'>Register</Button>
             </form>
         </Box>
     )

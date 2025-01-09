@@ -1,8 +1,8 @@
 import React,{useState} from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../app/store';
-import { Box, Card, Container, Drawer, List, ListItem, ListItemButton, ListItemIcon, Typography } from '@mui/material';
-import { Assignment, BookOnlineRounded, DashboardRounded } from '@mui/icons-material';
+import { Box, Card, CardContent, Container, Drawer, List, ListItem, ListItemButton, ListItemIcon, Typography } from '@mui/material';
+import { Assignment, Book, BookOnlineRounded, DashboardRounded } from '@mui/icons-material';
 import StudentDashboard from './StudentDashboard';
 import AssignedBooks from './AssignedBook';
 import BooksList from './BookList';
@@ -13,6 +13,11 @@ const Dashboard:React.FC=()=>{
     const handlePage =(value:string)=>{
         setPage(value);
     }
+    const books = useSelector((state:RootState)=>state.book.books);
+    const assignedBookList = useSelector((state:RootState)=>state.book.assignedBookList);
+    const totalBooks = books.length;
+    const returnedBookLength = assignedBookList.filter((book)=>book.status==='Returned').length
+    const assignedBookLength = assignedBookList.length;
     return (
         <>
         {user?.role==='admin' && 
@@ -40,7 +45,59 @@ const Dashboard:React.FC=()=>{
                 </List>
             </Drawer>
             <Box>
-                { page==='dashboard' && <Card>Dashboard details</Card>}
+                { page==='dashboard' && 
+                    <Container>
+                    <Box className="dashboard-cards-container">
+                    <Card className="dashboard-card">
+                        <CardContent>
+                        <Box className="card-content">
+                            <Book className="card-icon" />
+                            <Box>
+                            <Typography variant="h6" className="card-title">
+                                Total Books
+                            </Typography>
+                            <Typography variant="h4" className="card-value">
+                                {totalBooks}
+                            </Typography>
+                            </Box>
+                        </Box>
+                        </CardContent>
+                    </Card>
+            
+                    <Card className="dashboard-card">
+                        <CardContent>
+                        <Box className="card-content">
+                            <Book className="card-icon" />
+                            <Box>
+                            <Typography variant="h6" className="card-title">
+                                Assigned Books
+                            </Typography>
+                            <Typography variant="h4" className="card-value">
+                                {assignedBookLength}
+                            </Typography>
+                            </Box>
+                        </Box>
+                        </CardContent>
+                    </Card>
+            
+                    <Card className="dashboard-card">
+                        <CardContent>
+                        <Box className="card-content">
+                            <Book className="card-icon" />
+                            <Box>
+                            <Typography variant="h6" className="card-title">
+                                Returned Books
+                            </Typography>
+                            <Typography variant="h4" className="card-value">
+                                {returnedBookLength}
+                            </Typography>
+                            </Box>
+                        </Box>
+                        </CardContent>
+                    </Card>
+                    </Box>
+                </Container>
+                }
                 { page==='assigned' && <AssignedBooks/>}
                 { page==='bookslist' && <BooksList/>}
 

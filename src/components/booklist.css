@@ -1,0 +1,124 @@
+.container {
+    padding: 20px;
+    background-color: #f8f9fa;
+    color: #212529; 
+    font-family: Arial, sans-serif;
+}
+
+.modal-box {
+width: 500px;
+margin: auto;
+padding: 20px;
+border-radius: 8px;
+background-color: #ffffff;
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+outline: none;
+}
+
+.modal-title {
+font-size: 1.5rem;
+font-weight: bold;
+color: #495057;
+margin-bottom: 20px;
+}
+
+.modal-form {
+display: flex;
+flex-direction: column;
+}
+
+.modal-form div {
+margin-bottom: 16px;
+}
+
+.text-field,
+.select-dropdown {
+width: 100%;
+}
+
+.select-dropdown .MuiSelect-select {
+background-color: #ffffff;
+color: #212529;
+}
+
+.select-dropdown .MuiSelect-icon {
+color: #495057;
+}
+
+.error-message {
+color: #dc3545;
+font-size: 0.9rem;
+margin-top: 4px;
+}
+
+.primary-button {
+display: inline-block;
+padding: 10px 16px;
+background-color: #007bff;
+color: #ffffff;
+border: none;
+border-radius: 4px;
+font-size: 1rem;
+font-weight: bold;
+text-align: center;
+cursor: pointer;
+}
+
+.primary-button:hover {
+background-color: #0056b3;
+}
+
+.danger-button {
+    background-color: #dc3545;
+    color: #ffffff;
+}
+
+.danger-button:hover {
+    background-color: #b02a37; 
+    color: #f8f9fa;
+}
+
+.secondary-button {
+    background-color: #6c757d;
+    color: #ffffff;}
+
+.secondary-button:hover {
+    background-color: #495057;
+    color: #f8f9fa;
+}
+
+.table-container {
+margin-top: 20px;
+border: 1px solid #dee2e6; 
+border-radius: 8px;
+overflow: hidden;
+}
+
+.table {
+width: 100%;
+border-collapse: collapse;
+}
+
+.table th {
+background-color: #007bff;
+color: #ffffff;
+padding: 10px;
+text-align: left;
+}
+
+.table td {
+padding: 10px;
+color: #495057;
+border-bottom: 1px solid #dee2e6;
+}
+
+.table-row-actions button {
+margin-right: 8px;
+}
+
+.no-books {
+font-size: 1.2rem;
+color: #495057;
+text-align: center;
+margin-top: 20px;
+}

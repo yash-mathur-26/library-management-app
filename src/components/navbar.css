@@ -1,0 +1,68 @@
+.app-bar {
+    background-color: #1976d2;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.app-bar-container {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 0 16px;
+}
+
+.app-bar-toolbar {
+display: flex;
+align-items: center;
+justify-content: space-between;
+width: 100%;
+}
+
+.app-bar-title {
+font-size: 1.5rem;
+font-weight: bold;
+color: #ffffff;
+}
+
+.menu-item {
+margin-left: 16px;
+}
+
+.menu-item a {
+text-decoration: none;
+color: #ffffff;
+font-size: 1rem;
+font-weight: 500;
+}
+
+.menu-item a:hover {
+color: #ffcc00; /* Highlight color */
+}
+
+.avatar-box {
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+.icon-button {
+color: #ffffff;
+}
+
+.menu {
+margin-top: 10px;
+}
+
+.logout-menu-item {
+font-size: 1rem;
+color: #333333;
+}
+
+.logout-menu-item:hover {
+    background-color: #f5f5f5;
+}
+
+
+.box-container {
+    display: flex;
+    align-items: center;
+}

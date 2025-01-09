@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { loginUser } from '../features/authSlice';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, TextField } from '@mui/material';
-
+import './loginUser.css';
 const LoginUser:React.FC=()=>{
     const [formData,setFormData] = useState({email:'',password:''});
     const [ errors,setErrors ] = useState({email:'',password:''});
@@ -39,7 +39,7 @@ const LoginUser:React.FC=()=>{
         }
     }
     return (
-        <Box>
+        <Box className="loginbox">
             <form onSubmit={loginPortal}>
             <div>
                 <TextField
@@ -55,6 +55,7 @@ const LoginUser:React.FC=()=>{
                 <TextField
                     label="Password"
                     fullWidth
+                    type='password'
                     margin="normal"
                     value={formData.password}
                     onChange={(e)=>setFormData({...formData,password:e.target.value})}

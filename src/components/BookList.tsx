@@ -5,6 +5,7 @@ import { addBook,assignBook, deleteBook, editBook } from '../features/bookSlice'
 import { bookAssigned } from '../features/authSlice';
 import { RootState } from '../app/store';
 import { Add, Delete, Edit } from '@mui/icons-material';
+import './booklist.css';
 const BooksList:React.FC=()=>{
     const [editBookModal,setEditBookModal] = useState(false);
     const [editData,setEditData] = useState({id:'',title:'',description:'',author:'',quantity:''});
@@ -131,55 +132,59 @@ const BooksList:React.FC=()=>{
     }
 
     return (
-        <Container>
-        <Modal 
+        <Container className='container'>
+        <Modal
             open={addBookModal} onClose={closeAddBook} 
             aria-labelledby="modal-modal-title" 
             aria-describedby='modal-modal-description'>
-                <Box>
-                <Typography>Add Book</Typography>
-                <form onSubmit={handleAddBook}>
+                <Box className='modal-box'>
+                <Typography className='modal-title'>Add Book</Typography>
+                <form onSubmit={handleAddBook} className='modal-form'>
                     <div>
                         <TextField
+                            className='text-field'
                             label="Title"
                             fullWidth
                             margin="normal"
                             value={bookData.title}
                             onChange={(e)=>setBookData({...bookData,title:e.target.value})}
                         />
-                        { errors.title && <p style={{color:"red"}}>{errors.title}</p>}
+                        { errors.title && <p className='error-message'>{errors.title}</p>}
                     </div>
                     <div>
                         <TextField
+                            className='text-field'
                             label="Author"
                             fullWidth
                             margin="normal"
                             value={bookData.author}
                             onChange={(e)=>setBookData({...bookData,author:e.target.value})}
                         />
-                        { errors.author && <p style={{color:"red"}}>{errors.author}</p>}
+                        { errors.author && <p className='error-message'>{errors.author}</p>}
                     </div>
                     <div>
                         <TextField
+                            className='text-field'
                             label="Description"
                             fullWidth
                             margin="normal"
                             value={bookData.description}
                             onChange={(e)=>setBookData({...bookData,description:e.target.value})}
                         />
-                        { errors.description && <p style={{color:"red"}}>{errors.description}</p>}
+                        { errors.description && <p className='error-message'>{errors.description}</p>}
                     </div>
                     <div>
                         <TextField
+                            className='text-field'
                             label="Quantity"
                             fullWidth
                             margin="normal"
                             value={bookData.quantity}
                             onChange={(e)=>setBookData({...bookData,quantity:e.target.value})}
                         />
-                        { errors.quantity && <p style={{color:"red"}}>{errors.quantity}</p>}
+                        { errors.quantity && <p className='error-message'>{errors.quantity}</p>}
                     </div>
-                    <Button type="submit">Add Book</Button>
+                    <Button type="submit" className='primary-button'>Add Book</Button>
                 </form>
                 </Box>
         </Modal>
@@ -189,11 +194,12 @@ const BooksList:React.FC=()=>{
             open={editBookModal} onClose={closeEditBookModal} 
             aria-labelledby="modal-modal-title" 
             aria-describedby='modal-modal-description'>
-                <Box>
-                <Typography>Edit Book Details</Typography>
+                <Box className="modal-box">
+                <Typography className='modal-title'>Edit Book Details</Typography>
                 <form onSubmit={handleEditDetails}>
                     <div>
                         <TextField
+                            className='text-field'
                             label="Title"
                             fullWidth
                             margin="normal"
@@ -204,35 +210,38 @@ const BooksList:React.FC=()=>{
                     </div>
                     <div>
                         <TextField
+                            className='text-field'
                             label="Author"
                             fullWidth
                             margin="normal"
                             value={editData.author}
                             onChange={(e)=>setEditData({...editData,author:e.target.value})}
                         />
-                        { errors.author && <p style={{color:"red"}}>{errors.author}</p>}
+                        { errors.author && <p className='error-message'>{errors.author}</p>}
                     </div>
                     <div>
                         <TextField
+                            className='text-field'
                             label="Description"
                             fullWidth
                             margin="normal"
                             value={editData.description}
                             onChange={(e)=>setEditData({...editData,description:e.target.value})}
                         />
-                        { errors.description && <p style={{color:"red"}}>{errors.description}</p>}
+                        { errors.description && <p className='error-message'>{errors.description}</p>}
                     </div>
                     <div>
                         <TextField
+                            className='text-field'
                             label="Quantity"
                             fullWidth
                             margin="normal"
                             value={editData.quantity}
                             onChange={(e)=>setEditData({...editData,quantity:e.target.value})}
                         />
-                        { errors.quantity && <p style={{color:"red"}}>{errors.quantity}</p>}
+                        { errors.quantity && <p className='error-message'>{errors.quantity}</p>}
                     </div>
-                    <Button type="submit">Edit Book</Button>
+                    <Button className="primary-button" type="submit">Edit Book</Button>
                 </form>
                 </Box>
         </Modal>
@@ -243,11 +252,11 @@ const BooksList:React.FC=()=>{
             open={assignBookModal} onClose={closeAssignBook} 
             aria-labelledby="modal-modal-title" 
             aria-describedby='modal-modal-description'>
-                <Box>
-                <Typography>Assign Book</Typography>
+                <Box className="modal-box">
+                <Typography className='modal-title'>Assign Book</Typography>
                 <form onSubmit={bookAssignmentMethod}>
                     <div>
-                        <Select id="userdropdown" value={selectedUserId} label="Select User" onChange={handleUserChange}>
+                        <Select className='select-dropdown' id="userdropdown" value={selectedUserId} label="Select User" onChange={handleUserChange}>
                             <MenuItem value="">None</MenuItem>
                             { users.map((user)=>(
                                 <MenuItem key={user.id} value={user.id}>
@@ -258,6 +267,7 @@ const BooksList:React.FC=()=>{
                     </div>
                     <div>
                         <TextField
+                            className='text-field'
                             label="Assigning Date"
                             fullWidth
                             type="date"
@@ -268,6 +278,7 @@ const BooksList:React.FC=()=>{
                     </div>
                     <div>
                         <TextField
+                            className='text-field'
                             label="Return Date"
                             fullWidth
                             margin="normal"
@@ -276,7 +287,7 @@ const BooksList:React.FC=()=>{
                             onChange={(e)=>setAssignBookData({...assignBookData,returnDate:e.target.value})}
                         />
                     </div>
-                    <Button type="submit">Assign Book</Button>
+                    <Button className="primary-button" type="submit">Assign Book</Button>
                 </form>
                 </Box>
         </Modal>
@@ -284,10 +295,10 @@ const BooksList:React.FC=()=>{
 
 
 
-            <Typography>Books List</Typography>
-            <Button onClick={openAddBookModal}>Add Book</Button>
-            {books.length>0 ? (<TableContainer component={Paper}>
-                <Table>
+            <Typography className='modal-title'>Books List</Typography>
+            <Button className="primary-button" onClick={openAddBookModal}>Add Book</Button>
+            {books.length>0 ? (<TableContainer className='table-container' component={Paper}>
+                <Table className='table'>
                     <TableHead>
                         <TableRow>
                             <TableCell>Title</TableCell>
@@ -303,15 +314,15 @@ const BooksList:React.FC=()=>{
                                 <TableCell>{book.description}</TableCell>
                                 <TableCell>{book.quantity}</TableCell>
                                 <TableCell>
-                                    <Button onClick={()=>{openEditBookModal(book.id)}}><Edit/>Edit</Button>
-                                    <Button onClick={()=>{handleDeleteBook(book.id)}}><Delete/>Delete</Button>
-                                    <Button onClick={()=>{handleAssignBook(book.title,book.id)}}><Add/>Assign Book</Button>
+                                    <Button className='primary-button' onClick={()=>{openEditBookModal(book.id)}}><Edit/>Edit</Button>
+                                    <Button className='danger-button' onClick={()=>{handleDeleteBook(book.id)}}><Delete/>Delete</Button>
+                                    <Button className="secondary-button" onClick={()=>{handleAssignBook(book.title,book.id)}}><Add/>Assign Book</Button>
                                 </TableCell>
                             </TableRow>
                         ))}
                     </TableHead>
                 </Table>
-            </TableContainer> ):(<Typography>No Books Added yet !!</Typography>)}
+            </TableContainer> ):(<Typography className='no-books'>No Books Added yet !!</Typography>)}
         </Container>
     )
 }

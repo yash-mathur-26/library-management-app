@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../app/store';
 import { returnBook } from '../features/bookSlice';
 import { bookReturned } from '../features/authSlice';
-
+import "./assignedList.css";
 const AssignedBooks:React.FC=()=>{
     const [assignBookModal,setAssignBookModal] = useState(false);
     const [bookData,setBookData] = useState({title:'',description:'',author:'',quantity:''});
@@ -21,16 +21,17 @@ const AssignedBooks:React.FC=()=>{
         e.preventDefault();
     }
     return (
-        <Container>
+        <Container className='container'>
         <Modal 
             open={assignBookModal} onClose={closeAddBook} 
             aria-labelledby="modal-modal-title" 
             aria-describedby='modal-modal-description'>
-                <Box>
-                <Typography>Assign Book</Typography>
+                <Box className="modal-box">
+                <Typography className='typography-title'>Assign Book</Typography>
                 <form onSubmit={handleAssignBook}>
                     <div>
                         <TextField
+                            className='text-field'
                             label="Title"
                             fullWidth
                             margin="normal"
@@ -40,6 +41,7 @@ const AssignedBooks:React.FC=()=>{
                     </div>
                     <div>
                         <TextField
+                            className='text-field'
                             label="Author"
                             fullWidth
                             margin="normal"
@@ -49,6 +51,7 @@ const AssignedBooks:React.FC=()=>{
                     </div>
                     <div>
                         <TextField
+                            className='text-field'
                             label="Description"
                             fullWidth
                             margin="normal"
@@ -58,6 +61,7 @@ const AssignedBooks:React.FC=()=>{
                     </div>
                     <div>
                         <TextField
+                            className='text-field'
                             label="Quantity"
                             fullWidth
                             margin="normal"
@@ -65,14 +69,14 @@ const AssignedBooks:React.FC=()=>{
                             onChange={(e)=>setBookData({...bookData,quantity:e.target.value})}
                         />
                     </div>
-                    <Button type="submit">Add Book</Button>
+                    <Button className="button button-submit" type="submit">Add Book</Button>
                 </form>
                 </Box>
         </Modal>
 
-            <Typography>Assigned Books List</Typography>
-            {assignedBooks.length>0 ? (<TableContainer component={Paper}>
-                <Table>
+            <Typography className='typography-title'>Assigned Books List</Typography>
+            {assignedBooks.length>0 ? (<TableContainer className='table-container' component={Paper}>
+                <Table className='table'>
                     <TableHead>
                         <TableRow>
                             <TableCell>Title</TableCell>
@@ -89,12 +93,12 @@ const AssignedBooks:React.FC=()=>{
                                 <TableCell>{book.assignDate}</TableCell>
                                 <TableCell>{book.returnDate}</TableCell>
                                 <TableCell>{book.status}</TableCell>
-                                <TableCell><Button disabled={(book.status==='Returned'?true:false)} onClick={()=>{handleReturnBook(book.id,book.bookId,book.userId)}}>Return</Button></TableCell>
+                                <TableCell className={(book.status==='Returned'?'table-cell-status-returned':'table-cell-status-pending')}><Button disabled={(book.status==='Returned'?true:false)} className={(book.status==="Returned"?"button-return":"button-disabled")}onClick={()=>{handleReturnBook(book.id,book.bookId,book.userId)}}>Return</Button></TableCell>
                             </TableRow>
                         ))}
                     </TableHead>
                 </Table>
-            </TableContainer> ):(<Typography>No Books Added yet !!</Typography>)}
+            </TableContainer> ):(<Typography className='typography-title'>No Books Added yet !!</Typography>)}
         </Container>
     )
 }

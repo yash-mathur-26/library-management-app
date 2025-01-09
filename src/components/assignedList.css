@@ -1,0 +1,115 @@
+.container {
+    padding: 20px;
+    background-color: #f8f9fa; 
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modal-box {
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+width: 80%;
+max-width: 500px;
+background-color: #ffffff;
+border-radius: 8px;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+padding: 20px;
+}
+
+.typography-title {
+font-size: 24px;
+font-weight: bold;
+color: #343a40;
+text-align: center;
+margin-bottom: 20px;
+}
+
+.text-field {
+margin-bottom: 15px;
+}
+
+.text-field input {
+font-size: 16px;
+color: #495057; 
+}
+
+.text-field label {
+font-size: 14px;
+color: #6c757d; 
+}
+
+.button {
+padding: 10px 20px;
+font-size: 16px;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+}
+
+.button-submit {
+background-color: #28a745;
+color: #ffffff;
+}
+
+.button-submit:hover {
+background-color: #218838; 
+}
+
+.button-disabled {
+background-color: #ced4da;
+color: #6c757d;
+cursor: not-allowed;
+}
+
+.button-return {
+background-color: #007bff; 
+color: #ffffff;
+}
+
+.button-return:hover {
+background-color: #0056b3; 
+}
+
+.table-container {
+margin-top: 20px;
+border-radius: 8px;
+overflow: hidden;
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.table {
+width: 100%;
+border-collapse: collapse;
+}
+
+.table th, .table td {
+padding: 10px 15px;
+text-align: left;
+border-bottom: 1px solid #dee2e6;
+}
+
+.table th {
+background-color: #343a40;
+color: #ffffff; 
+font-weight: bold;
+}
+
+.table tr:nth-child(even) {
+background-color: #f8f9fa;
+}
+
+.table tr:hover {
+background-color: #e9ecef;
+}
+
+.table-cell-status-returned {
+color: #28a745; 
+font-weight: bold;
+}
+
+.table-cell-status-pending {
+color: #ffc107;
+font-weight: bold;
+}
