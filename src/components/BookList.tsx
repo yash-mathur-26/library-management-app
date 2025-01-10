@@ -18,6 +18,7 @@ const BooksList:React.FC=()=>{
     const [deleteModal,setDeleteModal] = useState(false);
     const [errors,setError] = useState({title:'',description:'',author:'',quantity:''});
     const [selectedUserId,setUserId] = useState('');
+    const [assignedErrors,setAssignError] = useState({userName:'',assignDate:'',returnDate:''});
     const books = useSelector((state:RootState)=>state.book.books);
     const openEditBookModal=(bookId:string)=>{
         setEditBookModal(true);
@@ -82,7 +83,8 @@ const BooksList:React.FC=()=>{
     }
     const bookAssignmentMethod=(e:React.FormEvent)=>{
         e.preventDefault();
-        try {
+        if(assignFormValidate())
+            {try {
             dispatch(assignBook(assignBookData));
             dispatch(bookAssigned(assignBookData));
             closeAssignBook();
@@ -93,10 +95,14 @@ const BooksList:React.FC=()=>{
             }
         }
     }
+    }
     const closeAssignBook = ()=>{
         setAssignBook(false);
         setAssignBookData({
             userId:'',bookId:'',title:'',assignDate:'',returnDate:'',userName:'',status:"Pending"
+        })
+        setAssignError({
+            userName:'',assignDate:'',returnDate:''
         })
     }
     const handleDeleteBook=(bookId:string)=>{
@@ -204,6 +210,28 @@ const BooksList:React.FC=()=>{
         setError(newError);
         return isValid;
     }
+
+    const assignFormValidate=()=>{
+        let isValid = true;
+        const newError = {userName:'',assignDate:'',returnDate:''};
+        const assignDate = new Date(assignBookData.assignDate);
+        const returnDate = new Date(assignBookData.returnDate);
+        if(!assignBookData.userName.trim()){
+            newError.userName = "Please select a student to assign book"
+            isValid = false;
+        } if(!assignBookData.assignDate.trim()){
+            newError.assignDate = "Please select an Assigning Date"
+            isValid = false;
+        } if(!assignBookData.returnDate.trim()){
+            newError.returnDate = "Please select a Return Date"
+            isValid = false;
+        } if(assignDate>returnDate){
+            newError.returnDate = "Please choose the Return Date after Assigning date"
+            isValid = false;
+        }
+        setAssignError(newError);
+        return isValid;
+    }
     const today = new Date().toISOString().split('T')[0];
     return (
         <Container className='bookListContainer'>
@@ -223,6 +251,7 @@ const BooksList:React.FC=()=>{
                             margin="normal"
                             value={bookData.title}
                             onChange={(e)=>setBookData({...bookData,title:e.target.value})}
+                            error={!!errors.title}
                         />
                         { errors.title && <p className='error-message'>{errors.title}</p>}
                     </div>
@@ -234,6 +263,7 @@ const BooksList:React.FC=()=>{
                             margin="normal"
                             value={bookData.author}
                             onChange={(e)=>setBookData({...bookData,author:e.target.value})}
+                            error={!!errors.author}
                         />
                         { errors.author && <p className='error-message'>{errors.author}</p>}
                     </div>
@@ -245,6 +275,7 @@ const BooksList:React.FC=()=>{
                             margin="normal"
                             value={bookData.description}
                             onChange={(e)=>setBookData({...bookData,description:e.target.value})}
+                            error={!!errors.description}
                         />
                         { errors.description && <p className='error-message'>{errors.description}</p>}
                     </div>
@@ -257,6 +288,7 @@ const BooksList:React.FC=()=>{
                             type="number"
                             value={bookData.quantity}
                             onChange={(e)=>setBookData({...bookData,quantity:e.target.value})}
+                            error={!!errors.quantity}
                         />
                         { errors.quantity && <p className='error-message'>{errors.quantity}</p>}
                     </div>
@@ -281,6 +313,7 @@ const BooksList:React.FC=()=>{
                             margin="normal"
                             value={editData.title}
                             onChange={(e)=>setEditData({...editData,title:e.target.value})}
+                            error={!!errors.title}
                         />
                     </div>
                     <div>
@@ -291,6 +324,7 @@ const BooksList:React.FC=()=>{
                             margin="normal"
                             value={editData.author}
                             onChange={(e)=>setEditData({...editData,author:e.target.value})}
+                            error={!!errors.author}
                         />
                         { errors.author && <p className='error-message'>{errors.author}</p>}
                     </div>
@@ -302,6 +336,7 @@ const BooksList:React.FC=()=>{
                             margin="normal"
                             value={editData.description}
                             onChange={(e)=>setEditData({...editData,description:e.target.value})}
+                            error={!!errors.description}
                         />
                         { errors.description && <p className='error-message'>{errors.description}</p>}
                     </div>
@@ -314,6 +349,7 @@ const BooksList:React.FC=()=>{
                             type="number"
                             value={editData.quantity}
                             onChange={(e)=>setEditData({...editData,quantity:e.target.value})}
+                            error={!!errors.quantity}
                         />
                         { errors.quantity && <p className='error-message'>{errors.quantity}</p>}
                     </div>
@@ -332,14 +368,15 @@ const BooksList:React.FC=()=>{
                 <Typography className='modal-title'>Assign Book</Typography>
                 <form onSubmit={bookAssignmentMethod}>
                     <div>
-                        <Select className='select-dropdown' id="userdropdown" value={selectedUserId} label="Select User" onChange={handleUserChange}>
+                        <Select error={!!assignedErrors.userName} className='select-dropdown' id="userdropdown" value={selectedUserId} label="Select User" onChange={handleUserChange}>
                             <MenuItem value="">None</MenuItem>
                             { users.map((user)=>(
                                 <MenuItem key={user.id} value={user.id}>
                                     {user.fullName}
                                 </MenuItem>
                             )) }
-                        </Select>    
+                        </Select>  
+                        {assignedErrors.userName && <p className='error-message'>{assignedErrors.userName}</p>}  
                     </div>
                     <div>
                         <TextField
@@ -356,7 +393,9 @@ const BooksList:React.FC=()=>{
                             InputLabelProps={{
                                 shrink: true,
                             }}
+                            error={!!assignedErrors.assignDate}
                         />
+                        {assignedErrors.assignDate && <p className='error-message'>{assignedErrors.assignDate}</p>}
                     </div>
                     <div>
                         <TextField
@@ -373,7 +412,9 @@ const BooksList:React.FC=()=>{
                             InputLabelProps={{
                                 shrink: true,
                             }}    
+                            error={!!assignedErrors.returnDate}
                         />
+                        {assignedErrors.returnDate && <p className='error-message'>{assignedErrors.returnDate}</p>}
                     </div>
                     <Button className="primary-button" type="submit">Assign Book</Button>
                 </form>

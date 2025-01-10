@@ -1,1 +1,0 @@
-export const loginLibrary = require('./libraryPhoto.svg');

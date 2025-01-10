@@ -58,6 +58,7 @@ form button {
 
 form button:hover {
     background-color: #145a86;
+    color:#f9f9f9;
 }
 
 @media (max-width: 480px) {

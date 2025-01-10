@@ -62,6 +62,7 @@ body {
 
 .primary-button:hover {
     background-color: #155a9b;
+    color: #fff;
 }
 
 .error-message {
